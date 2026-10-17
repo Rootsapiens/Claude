@@ -12,7 +12,7 @@ Owner: Cyrex. Read this together with `studio/game-brief.md`. The vertical slice
 ## Vertical slice
 
 ### M0 — Project setup
-**Owner:** Jonas. **Support:** Tess.
+**Owner:** Zurub. **Support:** Firas.
 - [ ] `game/` scaffold: Vite + TypeScript strict, Vitest, and `@playwright/test@1.56.1` with exact versions pinned and recorded in `game/README.md`.
 - [ ] All the scripts in the brief's script contract exist: `dev`, `build`, `preview`, `test`, `e2e`, `validate`, `check`.
 - [ ] Playwright is set up to use the preinstalled Chromium (`/opt/pw-browsers`) and does not try to download a browser.
@@ -22,8 +22,8 @@ Owner: Cyrex. Read this together with `studio/game-brief.md`. The vertical slice
 **Done when:** on a clean checkout, `cd game && npm ci && npm run check` exits 0, and `npm run build && npm run preview` serves a page that shows a canvas.
 
 ### M1 — Engine core (grey-box)
-**Owner:** Jonas. **Support:** Lena (rule schema), Tess (tests).
-- [ ] Scene loader: SVG layers drawn on a canvas, letterboxed at 960×540, with foreground occlusion.
+**Owner:** Zurub. **Support:** Imad (rule schema), Firas (tests).
+- [ ] Scene loader: image layers (background, prop sprites, foreground masks) drawn on a canvas, letterboxed at 960×540, with foreground occlusion.
 - [ ] Walkable polygon + A* pathfinding. Character depth scaling. Click-to-move.
 - [ ] Hotspots (polygons) with the smart cursor (eye / hand / mouth / arrow). Left click = walk to the hotspot and do its main verb. Right click = look.
 - [ ] Inventory bar: pick up, hold an item as the cursor, use it on a hotspot, combine two items, drop the held item.
@@ -41,22 +41,22 @@ Owner: Cyrex. Read this together with `studio/game-brief.md`. The vertical slice
 - No console errors in any e2e run.
 
 ### M2 — Slice content
-**Owners:** Lena (writing, puzzles, content data), Mio (art), Jonas (scene scripting, audio sound effects, end card). **Support:** Tess.
-- [ ] Lena: `studio/slice-design.md` with the puzzle dependency chart, the full walkthrough, the Celeste dialogue tree, and every look and fail line. Then all of it entered as content data in `game/src/content/`.
-- [ ] Mio: Largo do Sineiro and Varela's workshop as layered SVG (background, midground with prop states, foreground). Maren as a puppet (walk, idle, talk). Celeste (idle, talk). About 8 item icons. Walk polygons and hotspot polygons drawn to match the art.
-- [ ] Jonas: about 6 synthesized sound effects + 1 ambient bed per scene (Web Audio), the scripted exit of the raincoat man at the start, the tape-message sequence with on-screen notes, the end card.
+**Owners:** Imad (writing, puzzles, content data), Aktham (art), Zurub (scene scripting, audio sound effects, end card). **Support:** Firas.
+- [ ] Imad: `studio/slice-design.md` with the puzzle dependency chart, the full walkthrough, the Celeste dialogue tree, and every look and fail line. Then all of it entered as content data in `game/src/content/`.
+- [ ] Aktham: style guide and ChatGPT prompt sheets for every slice asset. From the owner's generated images: Largo do Sineiro and Varela's workshop as layered scenes (background, prop-state sprites, foreground masks), Maren (walk, idle, talk), Celeste (idle, talk), about 8 item icons, UI skin. Walk polygons and hotspot polygons drawn to match the art. Every shipped image logged in `game/CREDITS.md`.
+- [ ] Zurub: about 6 synthesized sound effects + 1 ambient bed per scene (Web Audio), the scripted exit of the raincoat man at the start, the tape-message sequence with on-screen notes, the end card.
 - [ ] All 3 puzzles from the brief (spare key, torn photo, silent tape) can be played end to end.
 
 **Done when:**
 - `npm run validate` passes and reports that the slice can be solved from the start state with no dead ends.
-- Tess's e2e walkthrough (`tests/e2e/slice-walkthrough.spec.ts`) plays from New Game to the end card with real clicks and passes 3 times in a row, headless.
+- Firas's e2e walkthrough (`tests/e2e/slice-walkthrough.spec.ts`) plays from New Game to the end card with real clicks and passes 3 times in a row, headless.
 - An e2e test saves before each puzzle, reloads the page, loads the save, and finishes the puzzle.
 - Every hotspot and every inventory item has look text. A wrong combination always gives a response, never silence.
 - Playwright stills of both scenes, empty and with Maren in them, are saved to `game/tests/e2e/__stills__/` for review.
 
 ### M3 — Slice polish and review gate
 **Owners:** all. **Reviewer:** Cyrex.
-- [ ] Art pass on the stills from Cyrex's review notes (follows `docs/workflow.md`: still → review → revise in code).
+- [ ] Art pass on the stills from Cyrex's review notes (follows `docs/workflow.md`: still → review → revise the prompt or the processing).
 - [ ] Writing pass for voice and humour. Cyrex checks it against the originality guardrails.
 - [ ] Bug fixing until no open bugs block play.
 - [ ] Performance: 60 fps in headless Chromium (measured), build under 5 MB, first interaction under 3 s on `vite preview`.

@@ -11,7 +11,8 @@ A classic 2D point-and-click mystery adventure. It has painted-looking scenes, a
 ### Originality guardrails (hard rule)
 - No characters, names, plot points, dialogue, art, music, UI art or sound from Broken Sword or any other existing game.
 - No Templars, no Paris café bombing opening, no clown, no tourist-and-journalist double act, no manuscript/tripod MacGuffin, no goat puzzle.
-- All art is drawn by the team in code (SVG), and all audio is synthesized by the team. No third-party assets except fonts under the SIL Open Font License, each one recorded in `game/CREDITS.md`.
+- Art is generated with ChatGPT from the team's own prompts (`studio/art/prompts/`). Prompts never name an existing game, studio, film, artist or character, and never ask for anyone's style. Every shipped image is logged with its prompt in `game/CREDITS.md`. Check ChatGPT's terms of use for commercial rights before any release.
+- All audio is synthesized by the team. No other third-party assets except fonts under the SIL Open Font License, each one recorded in `game/CREDITS.md`.
 - If a team member is unsure whether something is too close to an existing work, they flag it to Cyrex and do not ship it.
 - "The Seventh Bell" is a working title only. Check the name against existing games and trademarks before any public release.
 
@@ -72,13 +73,13 @@ Mouse first. Touch input (tap = main verb, long-press = look) comes after the sl
 ## 8. Art direction
 
 - **Look:** painted-looking 2D scenes. Warm Lisbon light, ochre and terracotta walls, azulejo-blue accents, soft gradients, a painterly grain texture. Clean dark outlines on characters only.
-- **Canvas:** logical resolution 960×540 (16:9), letterboxed and scaled to the window. Vector art stays sharp at any scale.
-- **How art is made in the slice:** there is no human artist and no image-generation tool. All art is **hand-authored SVG written as code** by the vector artist:
-  - Each scene has 2–3 SVG layers: a background, a midground for props that can change state (open drawer, picked-up item gone), and a foreground for occlusion (things that draw in front of Maren).
-  - A painted feel comes from layered gradients plus SVG filters (`feTurbulence` grain, soft `feGaussianBlur` shadows). Filters are rasterized once at load time so the game keeps 60 fps.
-  - Characters are SVG cut-out puppets: separate head, torso, arms and legs groups, animated in code with a 4-pose walk cycle, a talking mouth flap and an idle sway. Facing left/right is done by mirroring the drawing.
-  - Each inventory item is a 64×64 SVG icon.
-  - Art review follows the studio still-frame workflow (`docs/workflow.md`): Playwright renders a still of each scene, Cyrex reviews it, and the art is revised in code.
+- **Canvas:** logical resolution 960×540 (16:9), letterboxed and scaled to the window. Art is exported at 2× (1920×1080 for scenes) so it stays sharp when scaled up.
+- **How art is made in the slice:** images generated with ChatGPT. Aktham (Designer) writes a style guide and one prompt sheet per asset; the owner runs the prompts in ChatGPT and saves the images to `game/art-incoming/`; Aktham reviews, processes and wires them in:
+  - Each scene is a painted background image, plus prop-state sprites for things that change (open drawer, picked-up item gone), plus foreground occlusion cut from the background with polygon masks (things that draw in front of Maren).
+  - Every prompt carries the same fixed style block from the style guide so all scenes and characters match.
+  - Characters are generated from one reference sheet each, as full-body poses (idle, talk, walk) on a plain background that is keyed out to transparent. Facing left/right is done by mirroring. Risk: generated walk frames may not stay consistent; fallback is one pose per direction with a code-driven bob and slide.
+  - Each inventory item is a 64×64 icon (generated larger, scaled down).
+  - Art review follows the studio still-frame workflow (`docs/workflow.md`): Playwright renders a still of each scene, Cyrex reviews it, and Aktham revises the prompt or the processing.
 - **UI:** an aged-paper inventory bar and a serif font for dialogue (an SIL OFL font, bundled). Every line is subtitled.
 
 ## 9. Audio direction
@@ -133,7 +134,7 @@ The slice proves the whole game loop at shipping quality in a small space. It in
 - **Look text** for every hotspot and item, plus funny or useful "that doesn't work" lines for wrong combinations (a general fallback plus about 10 specific ones).
 - **Save/load:** 3 slots plus autosave, available from the Esc menu and the title screen.
 - **Title screen, pause menu, end card.** Basic settings: text speed, volume, mute.
-- **Art:** both scenes, Maren (full puppet: walk, idle, talk), Celeste (idle, talk), about 8 item icons, all as code-authored SVG to the art direction above.
+- **Art:** both scenes, Maren (full puppet: walk, idle, talk), Celeste (idle, talk), about 8 item icons, all generated with ChatGPT to the art direction above.
 - **Audio:** about 6 synthesized sound effects plus 1 ambient bed per scene. Muting must not block any puzzle.
 - **Length:** about 15–25 minutes for a first-time player. Under 3 minutes for the scripted e2e walkthrough.
 
@@ -146,9 +147,9 @@ The slice proves the whole game loop at shipping quality in a small space. It in
 | Setting and era | Lisbon, 1997 (no mobile phones, tapes are plausible) |
 | Protagonist count | One playable character (Maren). A second character appears from Act 2 but is not playable. |
 | Verb interface | Contextual two-button smart cursor, not a verb bar |
-| Resolution | 960×540 logical, vector art, scaled to the window |
+| Resolution | 960×540 logical, 2× raster art, scaled to the window |
 | Engine | Custom TS + Canvas 2D + DOM UI. Fallback: Phaser 3 |
-| Art pipeline | Code-authored layered SVG, reviewed as stills |
+| Art pipeline | ChatGPT-generated images from team prompts, layered in code, reviewed as stills |
 | Voice | None. Full subtitles |
 | Music | None in the slice. Synthesized ambience and sound effects only |
 | Save system | localStorage, 3 slots + autosave, versioned |
