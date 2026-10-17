@@ -74,7 +74,7 @@ Mouse first. Touch input (tap = main verb, long-press = look) comes after the sl
 
 - **Look:** painted-looking 2D scenes. Warm Lisbon light, ochre and terracotta walls, azulejo-blue accents, soft gradients, a painterly grain texture. Clean dark outlines on characters only.
 - **Canvas:** logical resolution 960×540 (16:9), letterboxed and scaled to the window. Art is exported at 2× (1920×1080 for scenes) so it stays sharp when scaled up.
-- **How art is made in the slice:** images generated with ChatGPT. Aktham (Designer) writes a style guide and one prompt sheet per asset; the owner runs the prompts in ChatGPT and saves the images to `game/art-incoming/`; Aktham reviews, processes and wires them in:
+- **How art is made in the slice:** images generated with ChatGPT. Aktham (Designer) writes a style guide and one prompt sheet per asset; the images are generated with ChatGPT into `game/art-incoming/` (desktop app via computer use, the OpenAI Images API via `game/scripts/gen-image.mjs`, or owner handoff); Aktham reviews, processes and wires them in:
   - Each scene is a painted background image, plus prop-state sprites for things that change (open drawer, picked-up item gone), plus foreground occlusion cut from the background with polygon masks (things that draw in front of Maren).
   - Every prompt carries the same fixed style block from the style guide so all scenes and characters match.
   - Characters are generated from one reference sheet each, as full-body poses (idle, talk, walk) on a plain background that is keyed out to transparent. Facing left/right is done by mirroring. Risk: generated walk frames may not stay consistent; fallback is one pose per direction with a code-driven bob and slide.
